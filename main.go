@@ -1,11 +1,18 @@
 package main
 
 import (
-	"fmt"
-	"github.com/cmdargs/request"
+	"os"
+	"log"
+
+	"github.com/lbwise/curl/cli"
+	"github.com/lbwise/curl/client"
 )
 
 func main() {
-	r := request.ParseCmd()
-	fmt.Println(r.Cookies)
+	req, err := cli.ParseCmd()
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+	client.SendRequest(req)
 }

@@ -1,12 +1,14 @@
-package request
+package cli
 
 import (
 	"os"
 	"strings"
+	"errors"
 )
 
 type Request struct {
 	URL string
+	Method string
 	Cookies string
 	UserAgent string
 	Help bool
@@ -15,7 +17,10 @@ type Request struct {
 }
 
 
-func ParseCmd() *Request {
+func ParseCmd() (*Request, error) {
+	if len(os.Args) == 1 {
+		return nil, errors.New("please enter a URL to request")
+	}
 	args := os.Args[1:]
 	var req *Request = &Request{}
 	var keys []string
@@ -25,6 +30,9 @@ func ParseCmd() *Request {
 			case "cookies":
 				req.Cookies = keys[1]
 			
+			case "method":
+				req.Method = keys[1]
+
 			case "agent":
 				req.UserAgent = keys[1]
 			
@@ -41,5 +49,5 @@ func ParseCmd() *Request {
 				req.URL = keys[0]
 		}
 	}
-	return req
+	return req, nil
 }
